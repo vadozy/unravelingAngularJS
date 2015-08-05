@@ -4,9 +4,9 @@
   .constant('apiUrl',
     'http://unraveling-ng.azurewebsites.net/api/dive/location/')
   .constant('userId',
-    'e07b5e72-3a24-40d5-98d3-7faed46341c2')
+    '044a9b9d-13b5-4e55-ae67-76ebc3f75b35')
   .constant('userSecret',
-    '3c9c8a7bc25e402596750d15882f24c2a41d5adcb3f8430dbbf6308cfc1597f88c583821731a41008636282184cfcd10');
+    'a39991ccf50a464f8fbd6677dc536b27a7c345909afe4f6db4984a698b024b9beacccc98b9f54eb781c7085350c62a1e');
 
 function locationsApi($http, apiUrl,
   userId, userSecret) {
@@ -47,24 +47,23 @@ function locationsApi($http, apiUrl,
   }
 
   function getAuthHeader() {
-    return "TenantSecret "
-      + userId + "," + userSecret;
+    return "TenantSecret " + userId + "," + userSecret;
   }
 
   return {
-    getLocations: function () {
+    getLocations: function() {
       return get();
     },
-    getLocationById: function (id) {
+    getLocationById: function(id) {
       return get(id)
     },
-    addLocation: function (location) {
+    addLocation: function(location) {
       return post(location)
     },
-    removeLocation: function (id) {
+    removeLocation: function(id) {
       return del(id)
     },
-    updateLocation: function (location) {
+    updateLocation: function(location) {
       return put(location)
     }
   }
@@ -158,27 +157,25 @@ function LocationsCtrl($scope, locationsApi) {
   }
 
   function add() {
-    useBackend(-1, function () {
-      return locationsApi.addLocation(
-        {
-          id: 0,
-          displayName: $scope.model.locationBox
-        })
+    useBackend(-1, function() {
+      return locationsApi.addLocation({
+        id: 0,
+        displayName: $scope.model.locationBox
+      })
     })
   }
 
   function save() {
-    useBackend(selectedId, function () {
-      return locationsApi.updateLocation(
-        {
-          id: selectedId,
-          displayName: $scope.model.locationBox
-        })
+    useBackend(selectedId, function() {
+      return locationsApi.updateLocation({
+        id: selectedId,
+        displayName: $scope.model.locationBox
+      })
     })
   }
 
   function remove(id) {
-    useBackend(id, function () {
+    useBackend(id, function() {
       return locationsApi.removeLocation(id);
     })
   }
@@ -205,13 +202,13 @@ function LocationsCtrl($scope, locationsApi) {
   function refresh() {
     busy(-2);
     locationsApi.getLocations()
-      .success(function (data) {
+      .success(function(data) {
         $scope.locations = data;
         complete(-2);
         $scope.errorMessage = '';
       })
       .error(
-        function (errorInfo, status) {
+        function(errorInfo, status) {
           setError(errorInfo, status, -2)
         });
 
@@ -223,12 +220,12 @@ function LocationsCtrl($scope, locationsApi) {
     $scope.errorMessage = '';
     operation()
       .success(
-        function (data) {
+        function(data) {
           refresh();
           complete(id);
         })
       .error(
-        function (errorInfo, status) {
+        function(errorInfo, status) {
           setError(errorInfo, status, id)
         });
   }
@@ -238,11 +235,9 @@ function LocationsCtrl($scope, locationsApi) {
     complete(id);
     if (status == 401) {
       $scope.errorMessage = "Authorization failed."
-    } else if (angular.isDefined(errorInfo.reasonCode)
-        && errorInfo.reasonCode == "TenantLimitExceeded")
-    {
+    } else if (angular.isDefined(errorInfo.reasonCode) && errorInfo.reasonCode == "TenantLimitExceeded") {
       $scope.errorMessage =
-          "You cannot add more locations.";
+        "You cannot add more locations.";
     } else {
       $scope.errorMessage = errorInfo.message;
     }
