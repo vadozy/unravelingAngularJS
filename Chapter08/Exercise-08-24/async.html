@@ -38,7 +38,7 @@
           ctrl.$asyncValidators.domain = function (value) {
             var defer = $q.defer();
             if (ctrl.$isEmpty(value)) {
-              defer.resolved();
+              defer.resolve();
             } else {
               element.addClass('checking');
               setTimeout(function () {
